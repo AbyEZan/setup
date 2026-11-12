@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Registro Escolar Sustentable</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f6f4;--card:#fff;--tx:#1d2521;--mu:#64706a;--ln:#dde3df;--ac:#1f7a52;--acs:#e0f2ea;--rd:#c0392b;--rds:#fbe4e1;--yl:#fff3c4}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141816;--card:#1d2420;--tx:#e8eeea;--mu:#93a19a;--ln:#303a35;--ac:#4cc38a;--acs:#1f3a2d;--rd:#ff7b6b;--rds:#3d201c;--yl:#4a4120}}
+:root[data-theme="dark"]{--bg:#141816;--card:#1d2420;--tx:#e8eeea;--mu:#93a19a;--ln:#303a35;--ac:#4cc38a;--acs:#1f3a2d;--rd:#ff7b6b;--rds:#3d201c;--yl:#4a4120}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:14px 16px 6px}h1{font-size:19px;margin:0}header p{margin:2px 0 0;color:var(--mu);font-size:13px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav button{white-space:nowrap;border:1px solid var(--ln);background:var(--card);color:var(--tx);padding:7px 12px;border-radius:20px;font-size:14px}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{padding:8px 12px 40px;max-width:980px;margin:auto}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px;margin-bottom:12px}
+h2{font-size:16px;margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--acs);border-radius:10px;padding:10px}.stat b{font-size:24px;display:block}.stat span{color:var(--mu);font-size:12px}
+.stat.bad{background:var(--rds)}
+input,select,button.b{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;max-width:100%}
+button.b{background:var(--ac);color:#fff;border-color:var(--ac);cursor:pointer}button.b.s{background:var(--bg);color:var(--tx);border-color:var(--ln)}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:8px}label input,label select{display:block;width:100%;margin-top:3px}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid var(--ln);padding:5px;text-align:center;vertical-align:middle}
+th{background:var(--acs)}td.l{text-align:left}
+.sch td{font-size:11px;min-width:92px;height:42px}.sch td.h{min-width:62px;font-weight:600;background:var(--acs)}
+.cal input{width:46px;text-align:center;padding:4px}.cal input.f{color:var(--rd);font-weight:700;border-color:var(--rd);background:var(--rds)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--ln)}.row:last-child{border:0}
+.row .g{flex:1;min-width:150px}.mu{color:var(--mu);font-size:12px}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;background:var(--acs)}
+.alert{background:var(--rds);color:var(--rd);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px}
+.seg button{border:1px solid var(--ln);background:var(--bg);color:var(--tx);padding:6px 10px;margin-right:4px;border-radius:8px}
+.seg button.P{background:var(--ac);color:#fff}.seg button.R{background:var(--yl)}.seg button.F{background:var(--rd);color:#fff}
+@media print{nav,header,.np{display:none!important}body{background:#fff;color:#000}.card{border:0}input{border:0!important;background:none!important;color:#000!important}:root{padding:0}}
+</style></head><body>
+<header><h1>🌱 Registro Escolar Sustentable</h1><p>Actividades, asistencias y calificaciones — gestionado por alumnos · ISC 1A · AGO-DIC 2026</p></header>
+<nav id="nav"></nav><main id="app"></main>
+<script>
+const DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes'],TEMAS=['I','II','III','IV','V','VI','VII'];
+const COL=['#fff3a8','#bcd3f0','#f7d9b8','#d6e4bd','#cfd6ff','#e7c9a9','#f6c4d4','#c9ecec'];
+const S=(m,d,h1,h2,r)=>({m,d,s:h1,e:h2,r});
+function def(){return{
+perfil:{tutorado:'',tutor:'',depto:'Sistemas y Computación',control:'',grupo:'1A',semestre:'1',carrera:'Ingeniería en Ciberseguridad',prom:''},
+materias:[
+{id:'ING',n:'Inglés',doc:'',g:''},{id:'CAL',n:'Cálculo Diferencial',doc:'Delfino Olivares Sagahon',g:'144'},
+{id:'EST',n:'Fund. de Estructuras Discretas para la Ciberseguridad',doc:'José Manuel Romero Orta',g:'142'},
+{id:'COM',n:'Comunicación Humana',doc:'Faydi Ayadet Hernández Guzmán',g:'145'},
+{id:'CIB',n:'Fundamentos de Ciberseguridad',doc:'Juan de Dios Viniegra Vargas',g:'143'},
+{id:'DES',n:'Desarrollo Sustentable',doc:'Wendy Joseline Alonso del Angel',g:'146'},
+{id:'ETI',n:'Taller de Ética',doc:'Silvestre Téllez Argüelles',g:'1'},{id:'TUT',n:'Tutoría',doc:'',g:''}],
+hor:[S('ING',1,7,8,'Lab 1'),S('CAL',1,8,9,'ISC 1'),S('TUT',1,9,10,'ISC 2'),S('R',1,10,11),S('CIB',1,11,13,'Lab Cómputo 2'),S('EST',1,13,15,'Lab Cómputo 4'),S('COM',1,15,16,'ISC 2'),
+S('ING',2,7,8,'Lab 1'),S('EST',2,8,10,'ISC 1'),S('R',2,10,11),S('DES',2,11,13,'Lab Cómputo 3'),S('ETI',2,13,15,'ISC 2'),
+S('ING',3,7,8,'Lab 1'),S('COM',3,8,10,'ISC 2'),S('CIB',3,10,12,'Lab Cómputo 4'),S('R',3,12,13),S('CAL',3,13,15,'Lab Cómputo 3'),
+S('ING',4,7,9,'Salón 1'),S('CIB',4,9,10,'ISC 1'),S('R',4,10,11),S('DES',4,11,13,'Lab Cómputo 4'),S('ETI',4,13,15,'Lab Cómputo 4'),
+S('ING',5,7,8,'Lab 1'),S('CAL',5,8,10,'ISC 1'),S('DES',5,10,11,'Lab Cómputo 3')],
+act:[],asis:{},cal:{},obs:{},base:0}}
+let D;try{D=JSON.parse(localStorage.getItem('regEsc26'))}catch(e){}D=D||def();
+function save(){try{localStorage.setItem('regEsc26',JSON.stringify(D))}catch(e){}}
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mat=id=>D.materias.find(m=>m.id==id),mc=id=>COL[D.materias.findIndex(m=>m.id==id)%COL.length];
+const tabs=[['res','Resumen'],['hor','Horario'],['mat','Materias'],['act','Actividades'],['asi','Asistencia'],['a15','Anexo 15'],['imp','Impacto']];
+let tab='res',fecha=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function go(t){tab=t;draw()}
+function sesiones(f){const d=new Date(f+'T12:00:00').getDay();const l=D.hor.filter(h=>h.d==d&&h.m!='R').sort((a,b)=>a.s-b.s),o=[];
+l.forEach(h=>{const p=o[o.length-1];if(p&&p.m==h.m&&p.e==h.s)p.e=h.e;else o.push({...h})});return o}
+function stats(){const r={};Object.entries(D.asis).forEach(([k,v])=>{const m=k.split('|')[1];r[m]=r[m]||{t:0,a:0};r[m].t++;if(v!='F')r[m].a++});return r}
+function focos(){const o=[];D.materias.forEach(m=>TEMAS.forEach((t,i)=>{const v=(D.cal[m.id]||{})[i];if(v!==undefined&&v!==''&&v<70)o.push(m.n+' · tema '+t+' ('+v+')')}));return o}
+function hojas(){const e=D.act.filter(a=>a.est!='Pendiente').reduce((s,a)=>s+(+a.hojas||0),0);return Math.round((e+Object.keys(D.asis).length/40)*10)/10}
+function draw(){$('#nav').innerHTML=tabs.map(([k,n])=>`<button class="${k==tab?'on':''}" onclick="go('${k}')">${n}</button>`).join('');
+$('#app').innerHTML=V[tab]()}
+const V={
+res(){const st=stats(),T=Object.values(st).reduce((s,x)=>s+x.t,0),A=Object.values(st).reduce((s,x)=>s+x.a,0),hoy=new Date().toISOString().slice(0,10),
+sem=new Date(Date.now()+7*864e5).toISOString().slice(0,10),pend=D.act.filter(a=>a.est=='Pendiente').sort((a,b)=>a.f>b.f?1:-1),f=focos();
+return`<div class="grid"><div class="stat"><b>${pend.length}</b><span>actividades pendientes</span></div><div class="stat"><b>${T?Math.round(A/T*100)+'%':'—'}</b><span>asistencia general</span></div><div class="stat ${f.length?'bad':''}"><b>${f.length}</b><span>focos de alerta</span></div><div class="stat"><b>${hojas()}</b><span>hojas ahorradas</span></div></div>
+<div class="card" style="margin-top:12px"><h2>Próximas entregas</h2>${pend.slice(0,6).map(a=>`<div class="row"><div class="g"><b>${esc(a.t)}</b><div class="mu">${esc(mat(a.m)?.n)} · tema ${a.tema}</div></div><span class="tag" style="${a.f&&a.f<hoy?'background:var(--rds);color:var(--rd)':''}">${a.f||'sin fecha'}</span></div>`).join('')||'<p class="mu">Sin pendientes. Agrega actividades en la pestaña Actividades.</p>'}</div>
+<div class="card"><h2>Focos de alerta</h2>${f.map(x=>`<div class="alert">⚠ ${esc(x)}</div>`).join('')||'<p class="mu">Sin temas reprobados.</p>'}</div>`},
+hor(){let h='';for(let x=7;x<16;x++){h+=`<tr><td class="h">${x}:00</td>`;for(let d=1;d<=5;d++){const s=D.hor.find(s=>s.d==d&&s.s<=x&&x<s.e);
+if(!s)h+='<td></td>';else if(s.s!=x)continue;else if(s.m=='R')h+=`<td rowspan="${s.e-s.s}" style="background:var(--acs)">Receso</td>`;
+else{const m=mat(s.m);h+=`<td rowspan="${s.e-s.s}" style="background:${mc(s.m)};color:#222"><b>${esc(m?.n)}</b><br>${esc(s.r)}${m?.g?' · '+m.g:''}</td>`}}h+='</tr>'}
+return`<div class="card sc"><h2>Horario ${esc(D.perfil.semestre)}${esc(D.perfil.grupo.replace(/\d/g,''))} · ${esc(D.perfil.carrera)}</h2><table class="sch"><tr><th></th>${DIAS.map(d=>`<th>${d}</th>`).join('')}</tr>${h}</table></div>`},
+mat(){return`<div class="card"><h2>Materias</h2>${D.materias.map(m=>`<div class="row"><span style="width:14px;height:14px;border-radius:4px;background:${mc(m.id)}"></span><div class="g"><b>${esc(m.n)}</b><div class="mu">${esc(m.doc)||'Docente sin registrar'}${m.g?' · Gpo. '+esc(m.g):''}</div></div><button class="b s" onclick="delMat('${m.id}')">Quitar</button></div>`).join('')}</div>
+<div class="card np"><h2>Agregar materia (administrador del grupo)</h2><label>Nombre<input id="mn"></label><label>Docente<input id="md"></label><label>Grupo<input id="mg"></label><button class="b" onclick="addMat()">Agregar</button></div>`},
+act(){const o=D.materias.map(m=>`<option value="${m.id}">${esc(m.n)}</option>`).join('');
+return`<div class="card np"><h2>Nueva actividad</h2><label>Título<input id="at"></label><label>Materia<select id="am">${o}</select></label><div class="grid"><label>Tema<select id="atm">${TEMAS.map(t=>`<option>${t}</option>`).join('')}</select></label><label>Fecha límite<input id="af" type="date"></label><label>Hojas que ahorra<input id="ah" type="number" min="0" value="2"></label></div><button class="b" onclick="addAct()">Agregar</button></div>
+<div class="card"><h2>Actividades</h2>${D.act.map((a,i)=>`<div class="row"><div class="g"><b>${esc(a.t)}</b><div class="mu">${esc(mat(a.m)?.n)} · tema ${a.tema} · ${a.f||'sin fecha'}</div></div><select onchange="D.act[${i}].est=this.value;save();draw()">${['Pendiente','Entregada','Calificada'].map(e=>`<option ${e==a.est?'selected':''}>${e}</option>`).join('')}</select>${a.est=='Calificada'?`<input type="number" style="width:64px" value="${a.cal??''}" placeholder="Cal." onchange="D.act[${i}].cal=this.value;save()">`:''}<button class="b s" onclick="D.act.splice(${i},1);save();draw()">✕</button></div>`).join('')||'<p class="mu">Aún no hay actividades.</p>'}</div>`},
+asi(){const ss=sesiones(fecha),st=stats();
+return`<div class="card"><h2>Pase de lista</h2><label>Fecha<input type="date" value="${fecha}" onchange="fecha=this.value;draw()"></label>${ss.map(s=>{const k=fecha+'|'+s.m,v=D.asis[k];return`<div class="row"><div class="g"><b>${esc(mat(s.m)?.n)}</b><div class="mu">${s.s}:00–${s.e}:00 · ${esc(s.r)}</div></div><div class="seg">${[['P','Presente'],['R','Retardo'],['F','Falta']].map(([c,n])=>`<button class="${v==c?c:''}" onclick="mark('${k}','${c}')">${n}</button>`).join('')}</div></div>`}).join('')||'<p class="mu">No hay clases este día.</p>'}</div>
+<div class="card"><h2>Asistencia por materia</h2>${D.materias.map(m=>{const x=st[m.id];return x?`<div class="row"><div class="g">${esc(m.n)}</div><span class="tag">${Math.round(x.a/x.t*100)}% · ${x.a}/${x.t}</span></div>`:''}).join('')||'<p class="mu">Sin registros aún.</p>'}</div>`},
+a15(){const p=D.perfil,f=[['tutorado','Nombre del tutorado'],['tutor','Nombre del tutor'],['depto','Departamento de adscripción'],['control','No. de control'],['grupo','Grupo'],['semestre','Semestre'],['carrera','Carrera'],['prom','Prom. de bachillerato']],al=focos();
+return`<div class="card"><h2 style="text-align:center">FORMATO DE REGISTRO PARA DESEMPEÑO ACADÉMICO · ANEXO 15</h2><div class="grid">${f.map(([k,n])=>`<label>${n}<input value="${esc(p[k])}" onchange="D.perfil['${k}']=this.value;save()"></label>`).join('')}</div>
+<div class="sc cal"><table><tr><th rowspan="2">ASIGNATURA</th><th colspan="7">TEMAS / COMPETENCIAS</th><th rowspan="2">OBSERVACIONES</th></tr><tr>${TEMAS.map(t=>`<th>${t}</th>`).join('')}</tr>
+${D.materias.map((m,i)=>`<tr><td class="l">${i+1}.- ${esc(m.n)}</td>${TEMAS.map((t,j)=>{const v=(D.cal[m.id]||{})[j]??'';return`<td><input type="number" min="0" max="100" class="${v!==''&&v<70?'f':''}" value="${v}" onchange="setCal('${m.id}',${j},this.value)"></td>`}).join('')}<td><input style="width:150px" value="${esc(D.obs[m.id]||'')}" onchange="D.obs['${m.id}']=this.value;save()"></td></tr>`).join('')}</table></div>
+${al.map(x=>`<div class="alert">⚠ Foco de alerta: ${esc(x)}. Solicita revisión y acude a tu tutor.</div>`).join('')}
+<p class="mu">Calificaciones menores a 70 se marcan en rojo (reprobatorias). Registra cada tema evaluado para vigilar tu desempeño global.</p>
+<button class="b np" onclick="window.print()">Exportar / imprimir PDF</button></div>`},
+imp(){const h=hojas();return`<div class="card"><h2>Impacto sustentable (Capítulo IV)</h2><div class="grid"><div class="stat"><b>${h}</b><span>hojas ahorradas (estimado)</span></div><div class="stat"><b>$${(h*0.5).toFixed(2)}</b><span>ahorro aprox. en impresión (a $0.50/hoja)</span></div><div class="stat"><b>${(h*0.006).toFixed(2)} kg</b><span>papel no consumido (≈6 g/hoja)</span></div></div>
+<p class="mu">Cuenta las hojas de cada actividad entregada digitalmente, más 1 hoja por cada 40 registros de asistencia.</p>
+<label>Hojas usadas por semestre ANTES (dato de tu encuesta)<input type="number" value="${D.base||''}" onchange="D.base=+this.value;save();draw()"></label>${D.base?`<div class="stat"><b>${Math.min(100,Math.round(h/D.base*100))}%</b><span>reducción frente a la línea base</span></div>`:''}</div>
+<div class="card np"><h2>Respaldo de datos</h2><p class="mu">Tus datos viven en este navegador. Descarga un respaldo para no perderlos.</p><button class="b" onclick="exp()">Descargar respaldo</button> <label style="display:inline-block;margin-left:8px">Restaurar<input type="file" accept=".json" onchange="imp(this)"></label> <button class="b s" onclick="if(confirm('¿Borrar todo?')){D=def();save();draw()}">Reiniciar</button></div>`}};
+function mark(k,v){D.asis[k]=D.asis[k]==v?undefined:v;if(!D.asis[k])delete D.asis[k];save();draw()}
+function setCal(m,j,v){D.cal[m]=D.cal[m]||{};D.cal[m][j]=v===''?'':+v;save();draw()}
+function addMat(){const n=$('#mn').value.trim();if(!n)return;D.materias.push({id:'M'+Date.now(),n,doc:$('#md').value,g:$('#mg').value});save();draw()}
+function delMat(id){if(confirm('¿Quitar materia y sus datos?')){D.materias=D.materias.filter(m=>m.id!=id);D.hor=D.hor.filter(h=>h.m!=id);D.act=D.act.filter(a=>a.m!=id);save();draw()}}
+function addAct(){const t=$('#at').value.trim();if(!t)return;D.act.push({t,m:$('#am').value,tema:$('#atm').value,f:$('#af').value,hojas:$('#ah').value,est:'Pendiente'});save();draw()}
+function exp(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(D));a.download='respaldo-registro-escolar.json';a.click()}
+function imp(i){const r=new FileReader();r.onload=()=>{try{D=JSON.parse(r.result);save();draw()}catch(e){alert('Archivo no válido')}};r.readAsText(i.files[0])}
+draw();
+</script></body></html>
